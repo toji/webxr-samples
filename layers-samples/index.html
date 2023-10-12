@@ -119,35 +119,40 @@
             title: 'Projection Layer', category: 'Basics',
             path: 'proj-layer.html',
             description: 'Demonstrates drawing to a projection layer.',
-            noPolyfill: true
+            noPolyfill: true,
+            withLayersPolyfill: true
           },
 
           {
             title: 'Quad Layer', category: 'Basics',
             path: 'quad-layer.html',
             description: 'Demonstrates drawing to a quad layer.',
-            noPolyfill: true
+            noPolyfill: true,
+            withLayersPolyfill: true
           },
 
           {
             title: 'Cylinder Layer', category: 'Basics',
             path: 'cyld-layer.html',
             description: 'Demonstrates drawing to a cylinder layer.',
-            noPolyfill: true
+            noPolyfill: true,
+            withLayersPolyfill: true
           },
 
           {
             title: 'Cube Layer', category: 'Basics',
             path: 'cube-layer.html',
             description: 'Demonstrates drawing to a cube layer.',
-            noPolyfill: true
+            noPolyfill: true,
+            withLayersPolyfill: true
           },
 
           {
             title: 'Equirect Layer', category: 'Basics',
             path: 'eqrt-layer.html',
             description: 'Demonstrates drawing to an equirect layer.',
-            noPolyfill: true
+            noPolyfill: true,
+            withLayersPolyfill: true
           },
 
           
@@ -155,28 +160,32 @@
             title: 'Media Layer', category: 'Basics',
             path: 'media-layer-sample.html',
             description: 'Demonstrates using an equirect media layer for video playback.',
-            noPolyfill: true
+            noPolyfill: true,
+            withLayersPolyfill: true
           },
           
           {
             title: 'Equirect Video', category: 'Multi-layer',
             path: 'eqrt-video.html',
             description: 'Demonstrates immersive video playback with media controls using both equirect and projection layers.',
-            noPolyfill: true
+            noPolyfill: true,
+            withLayersPolyfill: true
           },
 
           {
             title: 'Layer VS Non-Layer', category: 'Multi-layer',
             path: 'quad-ab-test.html',
             description: 'An A/B test quality comparison of rendering the same square texture using quad layer vs drawing the texture directly into the scene.',
-            noPolyfill: true
+            noPolyfill: true,
+            withLayersPolyfill: true
           },
 
           {
             title: 'Layer Hit Test', category: 'Multi-layer',
             path: 'quad-select.html',
             description: 'Demonstrates a work-around to implement hit test on layers by placing transparent placeholders for each quad layer in the projection layer.',
-            noPolyfill: true
+            noPolyfill: true,
+            withLayersPolyfill: true
           },
           
 
@@ -184,7 +193,8 @@
             title: 'Projection Layer with Multiview', category: 'Multiview',
             path: 'proj-multiview.html',
             description: 'Demonstrates a technique to reduce the number of state changes made while rendering.',
-            noPolyfill: true
+            noPolyfill: true,
+            withLayersPolyfill: true
           }
         ];
 
@@ -232,6 +242,13 @@
             let polyfillLink = document.createElement('a');
             polyfillLink.href = page.path + '?usePolyfill=0';
             polyfillLink.textContent = 'Run Without Polyfill';
+            links.appendChild(polyfillLink);
+          }
+
+          if (page.withLayersPolyfill) {
+            let polyfillLink = document.createElement('a');
+            polyfillLink.href = page.path + '?useLayersPolyfill=1';
+            polyfillLink.textContent = 'Run With Layers Polyfill';
             links.appendChild(polyfillLink);
           }
 

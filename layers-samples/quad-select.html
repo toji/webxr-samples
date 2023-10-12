@@ -75,6 +75,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     if (QueryArgs.getBool('usePolyfill', true)) {
       let polyfill = new WebXRPolyfill();
     }
+    // If requested, use the polyfill to provide WebXR layers support
+    import WebXRLayersPolyfill from '../js/third-party/webxr-layers-polyfill/build/webxr-layers-polyfill.module.js';
+    if (QueryArgs.getBool('useLayersPolyfill', false)) {
+      let layersPolyfill  = new WebXRLayersPolyfill();
+    }
 
     // XR globals.
     let xrButton = null;
