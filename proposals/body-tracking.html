@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no'>
+    <meta name='mobile-web-app-capable' content='yes'>
+    <meta name='apple-mobile-web-app-capable' content='yes'>
+
+    <meta http-equiv="origin-trial" content="Ahfj+MLeL6bh+LNmpnSdepftxoDHHwjUG2KWZ4jjCb1WoZxtBlzF3cDHuJNVqnhr3HXJwQ+kLaw57NO15S0mRwwAAABkeyJvcmlnaW4iOiJodHRwczovL2ltbWVyc2l2ZS13ZWIuZ2l0aHViLmlvOjQ0MyIsImZlYXR1cmUiOiJXZWJYUlBsYW5lRGV0ZWN0aW9uIiwiZXhwaXJ5IjoxNjI5ODQ5NTk5fQ==">
+
+    <title>AR Plane Detection</title>
+
+    <link href='../css/common.css' rel='stylesheet'></link>
+
+  </head>
+  <body>
+    <header>
+      <details open>
+        <summary>Simple body tracking</summary>
+        This sample demonstrates using the WebXR body tracking API
+        to show your body's joints.
+        <p>
+
+          <a class="back" href="./index.html">Back</a>
+        </p>
+      </details>
+    </header>
+
+    <script type="module">
+      // Code adapted from three.js' WebXR hit test sample.
+      // three.js is covered by MIT license which can be found at:
+      // https://github.com/mrdoob/three.js/blob/master/LICENSE
+
+
+      import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+      import {WebXRButton} from '../js/util/webxr-button.js';
+      import {hitTest, filterHitTestResults} from '../js/hit-test.js';
+
+      let xrButton = null;
+      let camera, scene, renderer;
+      let room, spheres;
+			const scalehand = new THREE.Matrix4().makeScale(3, 3, 3);
+
+      init();
+
+      function init() {
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color( 0x505050 );
+
+				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 50 );
+
+        const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+        light.position.set(0.5, 1, 0.25);
+        scene.add(light);
+
+        renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setAnimationLoop( render );
+				renderer.xr.enabled = true;
+        renderer.autoClear = false;
+				document.body.appendChild( renderer.domElement );
+
+        xrButton = new WebXRButton({
+          onRequestSession: onRequestSession,
+          onEndSession: onEndSession,
+          textEnterXRTitle: "START AR",
+          textXRNotFoundTitle: "AR NOT FOUND",
+          textExitXRTitle: "EXIT AR",
+        });
+
+        document.querySelector('header').appendChild(xrButton.domElement);
+
+        if (navigator.xr) {
+          navigator.xr.isSessionSupported('immersive-ar')
+                      .then((supported) => {
+            xrButton.enabled = supported;
+          });
+        }
+
+        window.addEventListener( 'resize', onWindowResize );
+
+      }
+
+      function onRequestSession() {
+        let sessionInit = {
+          requiredFeatures: ['body-tracking'],
+          optionalFeatures: ['local-floor', 'bounded-floor'],
+        };
+        navigator.xr.requestSession('immersive-ar', sessionInit).then((session) => {
+          session.mode = 'immersive-ar';
+          xrButton.setSession(session);
+          onSessionStarted(session);
+        });
+      }
+
+      function onSessionStarted(session) {
+        session.addEventListener('end', onSessionEnded);
+
+        renderer.xr.setSession(session);
+
+        renderer.setAnimationLoop(render);
+      }
+
+      function onEndSession(session) {
+        session.end();
+      }
+
+      function onSessionEnded(event) {
+        xrButton.setSession(null);
+
+        renderer.setAnimationLoop(null);
+        renderer.xr.setSession(null)
+      }
+
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+
+
+      function render(timestamp, frame) {
+        if (frame) {
+
+          if ( frame.body ) {
+
+            let body = frame.body;
+
+            if (spheres == undefined) {
+
+              const geometry = new THREE.IcosahedronGeometry( 0.01, 3 );
+              const material = new THREE.MeshLambertMaterial();
+
+              spheres = new THREE.InstancedMesh( geometry, material, body.size );
+              spheres.translateZ( -1 ).setRotationFromMatrix (new THREE.Matrix4().makeRotationY(Math.PI));
+              spheres.instanceMatrix.setUsage( THREE.DynamicDrawUsage ); // will be updated every frame
+              scene.add( spheres );
+
+              const color = new THREE.Color();
+
+              for ( let i = 0; i < spheres.count; i ++ ) {
+
+                spheres.setColorAt( i, color.setHex( 0xffffff * Math.random() ) );
+
+              }
+
+              spheres.instanceMatrix.needsUpdate = true;
+
+            }
+
+            let i = 0;
+            const matrix = new THREE.Matrix4();
+            let space = renderer.xr.getReferenceSpace();
+            body.forEach(part => {
+
+              const pose = frame.getPose(part, space);
+              const position = pose.transform.position;
+
+              if (!part.jointName.includes("hand")) {
+                matrix.copy(scalehand);
+              } else {
+                matrix.identity();
+              }
+
+              matrix.setPosition( -position.x, position.y, position.z );
+              spheres.setMatrixAt( i++, matrix );
+
+            });
+
+            spheres.instanceMatrix.needsUpdate = true;
+
+            }
+
+          renderer.render(scene, camera);
+        }
+      }
+
+    </script>
+  </body>
+</html>
