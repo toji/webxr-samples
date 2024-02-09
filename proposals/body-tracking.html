@@ -32,7 +32,7 @@
       // https://github.com/mrdoob/three.js/blob/master/LICENSE
 
 
-      import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+      import * as THREE from 'https://unpkg.com/three@0.161.0/build/three.module.js';
       import {WebXRButton} from '../js/util/webxr-button.js';
       import {hitTest, filterHitTestResults} from '../js/hit-test.js';
 
@@ -110,7 +110,6 @@
         xrButton.setSession(null);
 
         renderer.setAnimationLoop(null);
-        renderer.xr.setSession(null)
       }
 
       function onWindowResize() {
