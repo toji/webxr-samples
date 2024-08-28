@@ -85,7 +85,7 @@
       function onRequestSession() {
         let sessionInit = {
           requiredFeatures: ['body-tracking'],
-          optionalFeatures: ['local-floor', 'bounded-floor'],
+          optionalFeatures: ['local-floor', 'bounded-floor', 'unbounded'],
         };
         navigator.xr.requestSession('immersive-ar', sessionInit).then((session) => {
           session.mode = 'immersive-ar';
