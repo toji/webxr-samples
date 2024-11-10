@@ -269,7 +269,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           playerInWorldSpaceOld,
           trackingSpaceOriginInWorldSpace);
 
-        // based on https://github.com/immersive-web/webxr/blob/master/input-explainer.md#targeting-ray-pose
+        // based on https://github.com/immersive-web/webxr/blob/main/input-explainer.md#targeting-ray-pose
         let inputSourcePose = ev.frame.getPose(ev.inputSource.targetRaySpace, refSpace);
         if (!inputSourcePose) {
           return;
