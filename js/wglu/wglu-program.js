@@ -32,7 +32,7 @@ var WGLUProgram = (function() {
   "use strict";
 
   // Attempts to allow the browser to asynchronously compile and link
-  var Program = function(gl) {
+  var Program = (gl) => {
     this.gl = gl;
     this.program = gl.createProgram();
     this.attrib = null;
@@ -43,7 +43,7 @@ var WGLUProgram = (function() {
     this._fragmentShader = null;
   }
 
-  Program.prototype.attachShaderSource = function(source, type) {
+  Program.prototype.attachShaderSource = (source, type) => {
     var gl = this.gl;
     var shader;
 
@@ -66,7 +66,7 @@ var WGLUProgram = (function() {
     gl.compileShader(shader);
   }
 
-  Program.prototype.attachShaderSourceFromXHR = function(url, type) {
+  Program.prototype.attachShaderSourceFromXHR = (url, type) => {
     var self = this;
     return new Promise(function(resolve, reject) {
       var xhr = new XMLHttpRequest();
@@ -83,7 +83,7 @@ var WGLUProgram = (function() {
     });
   }
 
-  Program.prototype.attachShaderSourceFromTag = function(tagId, type) {
+  Program.prototype.attachShaderSourceFromTag = (tagId, type) => {
     var shaderTag = document.getElementById(tagId);
     if (!shaderTag) {
       console.error("Shader source tag not found:", tagId);
@@ -112,7 +112,7 @@ var WGLUProgram = (function() {
     this.attachShaderSource(src, type);
   }
 
-  Program.prototype.bindAttribLocation = function(attribLocationMap) {
+  Program.prototype.bindAttribLocation = (attribLocationMap) => {
     var gl = this.gl;
 
     if (attribLocationMap) {
@@ -124,7 +124,7 @@ var WGLUProgram = (function() {
     }
   }
 
-  Program.prototype.transformFeedbackVaryings = function(varyings, type) {
+  Program.prototype.transformFeedbackVaryings = (varyings, type) => {
     gl.transformFeedbackVaryings(this.program, varyings, type);
   }
 
