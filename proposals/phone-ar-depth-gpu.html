@@ -102,6 +102,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
         let options = {
           requiredFeatures: ['depth-sensing'],
+          depthSensing: {
+            usagePreference: ["gpu-optimized", "cpu-optimized"],
+            dataFormatPreference: ["float32", "luminance-alpha"],
+          }
         };
 
         navigator.xr.requestSession('immersive-ar', options).then((session) => {
