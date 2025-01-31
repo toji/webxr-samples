@@ -252,12 +252,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           });
 
           tracked_anchors.forEach(anchor => {
-            const anchorPose = frame.getPose(anchor.anchorSpace, xrRefSpace);
-            if (anchorPose) {
-              anchor.context.sceneObject.matrix = anchorPose.transform.matrix;
-              anchor.context.sceneObject.visible = true;
-            } else {
-              anchor.context.sceneObject.visible = false;
+            if (anchor.context) {
+              const anchorPose = frame.getPose(anchor.anchorSpace, xrRefSpace);
+              if (anchorPose) {
+                anchor.context.sceneObject.matrix = anchorPose.transform.matrix;
+                anchor.context.sceneObject.visible = true;
+              } else {
+                anchor.context.sceneObject.visible = false;
+              }
             }
           });
 
